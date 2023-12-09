@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from .forms import PacjentRegistrationForm,  DietForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -6,7 +6,7 @@ from .models import Feedback, Wizyta, Diet
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 import datetime
-
+from django.http import HttpResponse
 def base(request):
     return render(request, 'base.html')
 
@@ -51,8 +51,16 @@ def panel_pacjenta(request):
         feedback.save()
 
     wizyty = Wizyta.objects.filter(patient=user)
+    diety = Diet.objects.filter(patient=user)
 
-    return render(request, 'panel_pacjenta.html', {'feedback': feedback, 'wizyty': wizyty})
+    return render(request, 'panel_pacjenta.html', {'feedback': feedback, 'wizyty': wizyty, 'diety': diety})
+
+@login_required
+def pobierz_diete(request, diet_id):
+    diet = get_object_or_404(Diet, id=diet_id)
+    response = HttpResponse(diet.pdf_file.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{diet.pdf_file.name}"'
+    return response
 
 
 

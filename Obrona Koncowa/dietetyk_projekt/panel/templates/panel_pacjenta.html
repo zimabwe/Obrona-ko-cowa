@@ -13,6 +13,17 @@
     {% endfor %}
   </ul>
 
+  <h3>Twoje diety:</h3>
+  <ul>
+    {% for dieta in diety %}
+      <li>Data dodania diety: {{ dieta.date_added }}</li>
+      <li>
+        Plik PDF:
+        <a href="{% url 'pobierz_diete' dieta.id %}" target="_blank">Pobierz dietę</a>
+      </li>
+    {% endfor %}
+  </ul>
+
   <form method="post" action="{% url 'panel_pacjenta' %}">
     {% csrf_token %}
     <label for="uwagi">Dodaj komentarz:</label>
