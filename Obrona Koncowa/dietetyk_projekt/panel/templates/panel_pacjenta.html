@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Panel Pacjenta</h2>
+  <h3>Informacje od pacjenta:</h3>
+  <p>Data dodania uwagi: {{ feedback.date_added }}</p>
+  <p>Uwagi: {{ feedback.comment }}</p>
+
+  <h3>Informacje od dietetyka:</h3>
+  <ul>
+    {% for wizyta in wizyty %}
+      <li>Data wizyty: {{ wizyta.date }}, Opis wizyty: {{ wizyta.description }}</li>
+    {% endfor %}
+  </ul>
+
+  <form method="post" action="{% url 'panel_pacjenta' %}">
+    {% csrf_token %}
+    <label for="uwagi">Dodaj komentarz:</label>
+    <textarea name="uwagi" rows="4" cols="50">{{ feedback.comment }}</textarea>
+    <br>
+    <button type="submit">Zapisz</button>
+  </form>
+{% endblock %}

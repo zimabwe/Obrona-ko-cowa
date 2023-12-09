@@ -10,6 +10,7 @@ class Wizyta(models.Model):
     date = models.DateField()
     description = models.TextField()
 
+
 class Diet(models.Model):
     id = models.AutoField(primary_key=True)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -18,5 +19,6 @@ class Diet(models.Model):
 
 class Feedback(models.Model):
     id = models.AutoField(primary_key=True)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     comment = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)

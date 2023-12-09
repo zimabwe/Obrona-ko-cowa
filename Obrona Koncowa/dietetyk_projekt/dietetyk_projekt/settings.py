@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-s7e$3kv=(=qtx@+zd73td#(k7xhkhrh*i=4(31kzn-*udw@21)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 
@@ -37,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'panel',
-    'dietetyk_projekt.panel'
+    'panel'
 ]
 
 MIDDLEWARE = [

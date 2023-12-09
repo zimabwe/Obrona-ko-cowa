@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Panel Dietetyka</h2>
+  <form method="post" action="{% url 'panel_dietetyka' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="pacjent_id">Wybierz pacjenta:</label>
+    <select name="pacjent_id">
+      {% for pacjent in pacjenci %}
+        <option value="{{ pacjent.id }}">{{ pacjent.username }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="informacje_wizytowe">Informacje o wizycie:</label>
+    <textarea name="informacje_wizytowe" rows="4" cols="50"></textarea>
+    <br>
+    <label for="pdf_file">Dodaj plik PDF z dietą:</label>
+    {{ diet_form.pdf_file }}
+    <br>
+    <button type="submit">Zapisz</button>
+  </form>
+
+  <h3>Feedback od pacjentów:</h3>
+  <ul>
+    {% for feedback in feedbacks %}
+      <li>Data dodania uwagi: {{ feedback.date_added }}</li>
+      <li>Uwagi: {{ feedback.comment }}</li>
+      <li>Od pacjenta: {{ feedback.patient.username }}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Lista pacjentów:</h3>
+  <ul>
+    {% for pacjent in pacjenci %}
+      <li>{{ pacjent.username }} - {{ pacjent.email }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from panel.views import base, register_pacjent, login_pacjent
+from panel.views import base, register_pacjent, login_pacjent, panel_pacjenta, panel_dietetyka, strona_glowna
 
 
 urlpatterns = [
@@ -24,5 +24,8 @@ urlpatterns = [
     path('', base, name='home'),
     path('panel/', include('panel.urls')),
     path('login/', login_pacjent, name='login'),
-    path('rejestracja/', register_pacjent, name='rejestracja')
+    path('rejestracja/', register_pacjent, name='rejestracja'),
+    path('panel_pacjenta/', panel_pacjenta, name='panel_pacjenta'),
+    path('panel_dietetyka/', panel_dietetyka, name='panel_dietetyka'),
+    path('strona_glowna/', strona_glowna, name='strona_glowna'),
 ]
