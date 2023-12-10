@@ -14,10 +14,9 @@
     <label for="informacje_wizytowe">Informacje o wizycie:</label>
     <textarea name="informacje_wizytowe" rows="4" cols="50"></textarea>
     <br>
-    <label for="pdf_file">Dodaj plik PDF z dietą:</label>
-    {{ diet_form.pdf_file }}
-    <br>
-    <button type="submit">Zapisz</button>
+    {{ diet_form.plik_pdf }}
+    <button type="button" onclick="document.getElementById('id_button_submit').click();">Dodaj plik PDF</button>
+    <input type="submit" name="button_submit" id="id_button_submit" value="Zapisz" class="hidden">
   </form>
 
   <h3>Feedback od pacjentów:</h3>

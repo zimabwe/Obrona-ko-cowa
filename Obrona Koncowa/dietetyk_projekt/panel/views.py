@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
-from .forms import PacjentRegistrationForm,  DietForm
+from .forms import PacjentRegistrationForm,  DietForm, PanelDietetykaForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Feedback, Wizyta, Diet
 from django.contrib.auth import get_user_model
@@ -43,7 +43,12 @@ User = get_user_model()
 @login_required
 def panel_pacjenta(request):
     user = request.user
-    feedback, created = Feedback.objects.get_or_create(patient=user)
+    feedbacks = Feedback.objects.filter(patient=user)
+
+    if feedbacks.exists():
+        feedback = feedbacks.first()  # lub dowolny inny sposób dostępu do obiektów, które pasują
+    else:
+        feedback = Feedback.objects.create(patient=user, comment='')
 
     if request.method == 'POST':
         uwagi = request.POST.get('uwagi', '')
@@ -73,19 +78,24 @@ def panel_dietetyka(request):
         if user.is_staff:
             wizyta = Wizyta.objects.create(patient_id=pacjent_id, date=datetime.date.today(), description=informacje_wizytowe)
 
+            # Utwórz najpierw obiekt Feedback
+            feedback = Feedback.objects.create(patient_id=pacjent_id, comment='')
 
             diet_form = DietForm(request.POST, request.FILES)
             if diet_form.is_valid():
-                pdf_file = diet_form.cleaned_data['pdf_file']
-                Diet.objects.create(patient_id=pacjent_id, pdf_file=pdf_file, feedback=wizyta)
+                plik_pdf = diet_form.cleaned_data['plik_pdf']
+                # Użyj obiektu Feedback do utworzenia obiektu Diet
+                Diet.objects.create(patient_id=pacjent_id, plik_pdf=plik_pdf, feedback=feedback)
 
         return redirect('panel_dietetyka')
 
     pacjenci = User.objects.filter(is_staff=False)
     feedbacks = Feedback.objects.filter(patient__in=pacjenci)
-    diet_form = DietForm()  # Dodane: Inicjalizacja formularza do dodawania diety
+    diet_form = DietForm()
 
     return render(request, 'panel_dietetyka.html', {'pacjenci': pacjenci, 'feedbacks': feedbacks, 'diet_form': diet_form})
+
+
 
 
 @login_required
