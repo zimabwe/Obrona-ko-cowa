@@ -26,12 +26,12 @@ class PanelDietetykaForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(PanelDietetykaForm, self).__init__(*args, **kwargs)
-        self.fields['button_submit'].widget.attrs['class'] = 'hidden'  # ukrywamy to pole, ale zostawić je w formularzu
+        self.fields['button_submit'].widget.attrs['class'] = 'hidden'
 
     def clean(self):
         cleaned_data = super(PanelDietetykaForm, self).clean()
         if 'button_submit' in self.data:
-            # Plik PDF nie jest obowiązkowy tylko wtedy, gdy zostanie naciśnięty przycisk zapisu bez wybrania pliku
+
             if not cleaned_data.get('plik_pdf'):
                 self._errors['plik_pdf'] = self.error_class(['To pole jest wymagane.'])
         return cleaned_data

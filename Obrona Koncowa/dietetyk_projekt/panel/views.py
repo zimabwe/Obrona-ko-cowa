@@ -46,7 +46,7 @@ def panel_pacjenta(request):
     feedbacks = Feedback.objects.filter(patient=user)
 
     if feedbacks.exists():
-        feedback = feedbacks.first()  # lub dowolny inny sposób dostępu do obiektów, które pasują
+        feedback = feedbacks.first()
     else:
         feedback = Feedback.objects.create(patient=user, comment='')
 
@@ -78,13 +78,13 @@ def panel_dietetyka(request):
         if user.is_staff:
             wizyta = Wizyta.objects.create(patient_id=pacjent_id, date=datetime.date.today(), description=informacje_wizytowe)
 
-            # Utwórz najpierw obiekt Feedback
+
             feedback = Feedback.objects.create(patient_id=pacjent_id, comment='')
 
             diet_form = DietForm(request.POST, request.FILES)
             if diet_form.is_valid():
                 plik_pdf = diet_form.cleaned_data['plik_pdf']
-                # Użyj obiektu Feedback do utworzenia obiektu Diet
+
                 Diet.objects.create(patient_id=pacjent_id, plik_pdf=plik_pdf, feedback=feedback)
 
         return redirect('panel_dietetyka')
