@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponse
+User = get_user_model()
 def base(request):
     return render(request, 'base.html')
 
@@ -38,7 +39,7 @@ def login_pacjent(request):
         form = AuthenticationForm()
 
     return render(request, 'login.html', {'form': form})
-User = get_user_model()
+
 
 @login_required
 def panel_pacjenta(request):
@@ -58,7 +59,8 @@ def panel_pacjenta(request):
     wizyty = Wizyta.objects.filter(patient=user)
     diety = Diet.objects.filter(patient=user)
 
-    return render(request, 'panel_pacjenta.html', {'feedback': feedback, 'wizyty': wizyty, 'diety': diety})
+    return render(request, 'panel_pacjenta.html', {'feedbacks': feedbacks, 'wizyty': wizyty, 'diety': diety})
+
 
 @login_required
 def pobierz_diete(request, diet_id):
@@ -69,6 +71,7 @@ def pobierz_diete(request, diet_id):
 
 
 
+@login_required
 def panel_dietetyka(request):
     if request.method == 'POST':
         pacjent_id = request.POST.get('pacjent_id')
@@ -78,18 +81,16 @@ def panel_dietetyka(request):
         if user.is_staff:
             wizyta = Wizyta.objects.create(patient_id=pacjent_id, date=datetime.date.today(), description=informacje_wizytowe)
 
-
             feedback = Feedback.objects.create(patient_id=pacjent_id, comment='')
 
             diet_form = DietForm(request.POST, request.FILES)
             if diet_form.is_valid():
-                plik_pdf = diet_form.cleaned_data['plik_pdf']
-
-                Diet.objects.create(patient_id=pacjent_id, plik_pdf=plik_pdf, feedback=feedback)
+                pdf_file = diet_form.cleaned_data['pdf_file']
+                Diet.objects.create(patient_id=pacjent_id, pdf_file=pdf_file, feedback=feedback)
 
         return redirect('panel_dietetyka')
 
-    pacjenci = User.objects.filter(is_staff=False)
+    pacjenci = get_user_model().objects.filter(is_staff=False)
     feedbacks = Feedback.objects.filter(patient__in=pacjenci)
     diet_form = DietForm()
 
